@@ -11,7 +11,6 @@ exports.getAllVideos = async (req, res) => {
   }
 };
 
-// Obtener un video por ID
 exports.getVideoById = async (req, res) => {
   const { id } = req.params;
   try {

@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const client = require('../config/db');
+const jwt = require('jsonwebtoken');
+
 
 // Encriptar la contraseña
 const encriptarContraseña = async (contraseña) => {
@@ -65,9 +67,92 @@ const obtenerUsuarioPorId = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+   const { email, contraseña } = req.body;
+   try {
+     const resultado = await client.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+        if (resultado.rows.length === 0) {
+            return res.status(400).json({ message: 'Usuario no encontrado' });
+        }
+        const usuario = resultado.rows[0];
+        const esValido = await verificarContraseña(contraseña, usuario.contraseña);
+        if (!esValido) {
+            return res.status(400).json({ message: 'Contraseña incorrecta' });
+        }
+        const token = jwt.sign(
+            { id: usuario.id, rol: usuario.rol },
+            'Walking_33', 
+            { expiresIn: '1h' }
+        );
+        res.json({ token });
+    } catch (error) {
+        console.error('Error en login:', error);
+        res.status(500).json({ message: 'Error en el servidor' });
+    }
+};
+
+
+const verificarUsuario = async (req, res) => {
+    const { nombre, email } = req.body;
+
+    try {
+        const query = 'SELECT * FROM usuarios WHERE nombre = $1 OR email = $2';
+        const { rowCount } = await client.query(query, [nombre, email]);
+
+        if (rowCount > 0) {
+            return res.status(400).json({ existe: true, mensaje: 'El nombre o email ya están en uso' });
+        }
+
+        res.status(200).json({ existe: false, mensaje: 'Nombre y email disponibles' });
+    } catch (error) {
+        console.error('Error verificando usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Obtener datos del usuario autenticado
+const obtenerUsuarioActual = async (req, res) => {
+    const usuarioId = req.usuario.id;
+
+    try {
+        // Obtener los datos del usuario
+        const resultadoUsuario = await client.query('SELECT id, nombre, email, comunidad_id FROM usuarios WHERE id = $1', [usuarioId]);
+
+        if (resultadoUsuario.rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
+
+        const usuario = resultadoUsuario.rows[0];
+        console.log('Datos del usuario:', usuario);
+
+        // Ahora obtener el nombre de la comunidad usando el comunidad_id
+        const resultadoComunidad = await client.query('SELECT nombre FROM comunidades WHERE id = $1', [usuario.comunidad_id]);
+
+        if (resultadoComunidad.rows.length === 0) {
+            return res.status(404).json({ mensaje: 'Comunidad no encontrada' });
+        }
+
+        // Añadimos el nombre de la comunidad a los datos del usuario
+        usuario.comunidad_nombre = resultadoComunidad.rows[0].nombre;
+
+        // Devolvemos los datos del usuario incluyendo el nombre de la comunidad
+        res.status(200).json(usuario);
+    } catch (err) {
+        console.error('Error al obtener el usuario actual:', err);
+        res.status(500).json({ mensaje: 'Error en el servidor' });
+    }
+};
+
+
+
+
+
 // Exportar funciones
 module.exports = {
     crearUsuario,
     obtenerUsuarios,
-    obtenerUsuarioPorId
+    obtenerUsuarioPorId,
+    login,
+    verificarUsuario,
+    obtenerUsuarioActual
 };
