@@ -1,6 +1,5 @@
 const client = require('../config/db');
 
-// Obtener todos los retos
 exports.getAllRetos = async (req, res) => {
   try {
     const resultado = await client.query('SELECT * FROM retos');
@@ -11,7 +10,6 @@ exports.getAllRetos = async (req, res) => {
   }
 };
 
-// Obtener un reto por ID
 exports.getRetoById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -26,7 +24,6 @@ exports.getRetoById = async (req, res) => {
   }
 };
 
-// Crear un nuevo reto
 exports.createReto = async (req, res) => {
   const { nombre, descripcion, fecha_inicio, fecha_fin, puntos, comunidad_id } = req.body;
   try {
@@ -41,7 +38,6 @@ exports.createReto = async (req, res) => {
   }
 };
 
-// Actualizar un reto
 exports.updateReto = async (req, res) => {
   const { id } = req.params;
   const { nombre, descripcion, fecha_inicio, fecha_fin, puntos, comunidad_id } = req.body;
@@ -60,7 +56,6 @@ exports.updateReto = async (req, res) => {
   }
 };
 
-// Eliminar un reto
 exports.deleteReto = async (req, res) => {
   const { id } = req.params;
   try {

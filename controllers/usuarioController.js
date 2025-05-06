@@ -3,7 +3,6 @@ const client = require('../config/db');
 const jwt = require('jsonwebtoken');
 
 
-// Encriptar la contraseña
 const encriptarContraseña = async (contraseña) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -15,7 +14,6 @@ const encriptarContraseña = async (contraseña) => {
     }
 };
 
-// Verificar la contraseña
 const verificarContraseña = async (contraseñaIntroducida, contraseñaHash) => {
     try {
         return await bcrypt.compare(contraseñaIntroducida, contraseñaHash);
@@ -25,7 +23,6 @@ const verificarContraseña = async (contraseñaIntroducida, contraseñaHash) => 
     }
 };
 
-// Crear un nuevo usuario
 const crearUsuario = async (req, res) => {
     const { nombre, email, contraseña, comunidad_id } = req.body;
     try {
@@ -41,7 +38,6 @@ const crearUsuario = async (req, res) => {
     }
 };
 
-// Obtener todos los usuarios
 const obtenerUsuarios = async (req, res) => {
     try {
         const resultado = await client.query('SELECT * FROM usuarios');
@@ -52,7 +48,6 @@ const obtenerUsuarios = async (req, res) => {
     }
 };
 
-// Obtener un usuario por ID
 const obtenerUsuarioPorId = async (req, res) => {
     const { id } = req.params;
     try {
@@ -110,13 +105,11 @@ const verificarUsuario = async (req, res) => {
     }
 };
 
-// Obtener datos del usuario autenticado
 const obtenerUsuarioActual = async (req, res) => {
     const usuarioId = req.usuario.id;
 
     try {
-        // Obtener los datos del usuario
-        const resultadoUsuario = await client.query('SELECT id, nombre, email, comunidad_id FROM usuarios WHERE id = $1', [usuarioId]);
+        const resultadoUsuario = await client.query('SELECT id, nombre, email, comunidad_id, rol FROM usuarios WHERE id = $1', [usuarioId]);
 
         if (resultadoUsuario.rows.length === 0) {
             return res.status(404).json({ mensaje: 'Usuario no encontrado' });
@@ -125,17 +118,14 @@ const obtenerUsuarioActual = async (req, res) => {
         const usuario = resultadoUsuario.rows[0];
         console.log('Datos del usuario:', usuario);
 
-        // Ahora obtener el nombre de la comunidad usando el comunidad_id
         const resultadoComunidad = await client.query('SELECT nombre FROM comunidades WHERE id = $1', [usuario.comunidad_id]);
 
         if (resultadoComunidad.rows.length === 0) {
             return res.status(404).json({ mensaje: 'Comunidad no encontrada' });
         }
 
-        // Añadimos el nombre de la comunidad a los datos del usuario
         usuario.comunidad_nombre = resultadoComunidad.rows[0].nombre;
 
-        // Devolvemos los datos del usuario incluyendo el nombre de la comunidad
         res.status(200).json(usuario);
     } catch (err) {
         console.error('Error al obtener el usuario actual:', err);
