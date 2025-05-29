@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const puntoController = require('../controllers/puntoController');
+const puntosController = require('../controllers/puntoController');
 
-// Rutas de puntos
-router.get('/', puntoController.getAllPuntos);
-router.post('/', puntoController.createPunto);
+
+router.get('/', puntosController.getAllPuntos);
+router.post('/', puntosController.createPunto);
+router.get('/balance/:usuario_id', puntosController.getBalance);
 
 module.exports = router;

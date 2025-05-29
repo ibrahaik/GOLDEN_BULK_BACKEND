@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const commentsController = require('../controllers/commentsController');
+
+// Obtener todos los comentarios de un post
+router.get('/:postId', commentsController.getCommentsByPost);
+
+// Añadir un comentario a un post
+router.post('/', commentsController.addComment);
+
+module.exports = router;

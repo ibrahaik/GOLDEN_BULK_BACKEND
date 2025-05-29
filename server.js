@@ -17,6 +17,12 @@ const comunidadRoutes = require('./routes/comunidadRoutes');
 const retoRoutes = require('./routes/retoRoutes');
 const videoRoutes = require('./routes/videoRoutes');
 const puntoRoutes = require('./routes/puntoRoutes');
+const postRoutes = require('./routes/postsRoutes');
+const likesRoutes = require('./routes/likesRoutes');
+const commentsRoutes = require('./routes/commentsRoutes');
+const compraRoutes = require('./routes/compraRoutes')
+const productosRoutes = require('./routes/productosRoutes');
+const informacionRoutes = require('./routes/informacionRoutes');
 
 // Middlewares
 app.use(cors());
@@ -28,13 +34,17 @@ app.use('/retos', retoRoutes);
 app.use('/videos', videoRoutes);
 app.use('/puntos', puntoRoutes);
 app.use('/usuarios', usuarioRoutes);
+app.use('/posts', postRoutes);
+app.use('/likes', likesRoutes);
+app.use('/comments', commentsRoutes);
+app.use('/compra', compraRoutes);
+app.use('/productos', productosRoutes);
+app.use('/informacion', informacionRoutes);
 
-// Rutas básicas
 app.get('/', (req, res) => {
-  res.send('¡Bienvenido a la API de FitPlus!');
+  res.send('Api Ibrahim');
 });
 
-// Manejo de errores
 app.use((req, res, next) => {
   res.status(404).send('Ruta no encontrada');
 });
@@ -44,10 +54,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Algo salió mal');
 });
 
-// SOCKET.IO
-require('./socket')(io); // 🔌 Importamos el archivo socket.js pasándole `io`
 
-// Iniciar servidor
 server.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);
 });
