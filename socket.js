@@ -1,9 +1,7 @@
-// socket.js (Versión Mejorada)
 const db = require('./config/db');
 const jwt = require('jsonwebtoken');
 
 module.exports = (io) => {
-  // Middleware de autenticación para sockets
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth.token;
@@ -18,10 +16,8 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log(`🔌 Nuevo usuario conectado: ${socket.user.nombre} (${socket.id})`);
 
-    // Unión segura a comunidad
     socket.on('joinCommunity', async (communityId) => {
       try {
-        // Verificar membresía en la comunidad
         const membership = await db.query(
           `SELECT 1 FROM usuarios 
            WHERE id = $1 AND comunidad_id = $2`,
@@ -35,7 +31,6 @@ module.exports = (io) => {
         socket.join(communityId);
         console.log(`🏘️ ${socket.user.nombre} unido a comunidad ${communityId}`);
 
-        // Cargar historial con paginación
         const history = await db.query(
           `SELECT u.nombre as sender, c.message, c.created_at 
            FROM chat c
@@ -53,14 +48,12 @@ module.exports = (io) => {
       }
     });
 
-    // Manejo mejorado de mensajes
     socket.on('sendMessage', async ({ message }, callback) => {
       try {
         if (!message || message.trim().length === 0) {
           return callback({ status: 'error', message: 'Mensaje vacío' });
         }
 
-        // Insertar en DB con RETURNING
         const { rows } = await db.query(
           `INSERT INTO chat 
            (community_id, user_id, message) 
@@ -69,7 +62,6 @@ module.exports = (io) => {
           [socket.user.comunidad_id, socket.user.id, message.trim()]
         );
 
-        // Construir objeto mensaje
         const fullMessage = {
           id: rows[0].id,
           sender: socket.user.nombre,
@@ -78,7 +70,6 @@ module.exports = (io) => {
           status: 'delivered'
         };
 
-        // Emitir a la sala
         io.to(socket.user.comunidad_id).emit('receiveMessage', fullMessage);
         callback({ status: 'ok' });
 

@@ -1,6 +1,5 @@
 const client = require('../config/db');
 
-// Obtener todos los puntos
 exports.getAllPuntos = async (req, res) => {
   try {
     const resultado = await client.query('SELECT * FROM puntos');
@@ -11,7 +10,6 @@ exports.getAllPuntos = async (req, res) => {
   }
 };
 
-// Crear transacción de puntos (positivo o negativo) para un usuario
 exports.createPunto = async (req, res) => {
   const { usuario_id, cantidad } = req.body;
   try {
@@ -27,7 +25,6 @@ exports.createPunto = async (req, res) => {
   }
 };
 
-// Obtener el balance total de puntos de un usuario
 exports.getBalance = async (req, res) => {
   const { usuario_id } = req.params;
   try {

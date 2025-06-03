@@ -24,11 +24,9 @@ const compraRoutes = require('./routes/compraRoutes')
 const productosRoutes = require('./routes/productosRoutes');
 const informacionRoutes = require('./routes/informacionRoutes');
 
-// Middlewares
 app.use(cors());
 app.use(bodyParser.json());
 
-// Rutas
 app.use('/comunidades', comunidadRoutes);
 app.use('/retos', retoRoutes);
 app.use('/videos', videoRoutes);

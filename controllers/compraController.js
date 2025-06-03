@@ -7,7 +7,6 @@ exports.comprarProducto = async (req, res) => {
     try {
       await client.query('BEGIN');
   
-      // 1. Verificar si el producto existe y tiene stock
       const { rows: productoRows } = await client.query(
         `SELECT * FROM productos WHERE id = $1 FOR UPDATE`,
         [producto_id]
@@ -17,7 +16,6 @@ exports.comprarProducto = async (req, res) => {
       if (!producto || producto.stock <= 0) {
         throw new Error('Producto no disponible');
       }
-      // 2. Obtener puntos del usuario
       const { rows: puntosRows } = await client.query(
         `SELECT COALESCE(SUM(cantidad), 0) AS total_puntos
         FROM puntos
@@ -30,19 +28,16 @@ exports.comprarProducto = async (req, res) => {
         throw new Error('No tienes suficientes puntos');
       }
   
-      // 3. Registrar la compra
       await client.query(
         `INSERT INTO compras (usuario_id, producto_id) VALUES ($1, $2)`,
         [usuario_id, producto_id]
       );
   
-      // 4. Descontar puntos
       await client.query(
         `INSERT INTO puntos (usuario_id, cantidad) VALUES ($1, $2)`,
         [usuario_id, -producto.precio_puntos]
       );
   
-      // 5. Reducir el stock
       await client.query(
         `UPDATE productos SET stock = stock - 1 WHERE id = $1`,
         [producto_id]

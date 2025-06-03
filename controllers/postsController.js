@@ -1,6 +1,5 @@
 const client = require('../config/db');
 
-// Obtener todos los posts
 exports.getAllPosts = async (req, res) => {
   try {
     const result = await client.query('SELECT * FROM posts ORDER BY created_at DESC');
@@ -11,7 +10,6 @@ exports.getAllPosts = async (req, res) => {
   }
 };
 
-// Crear un nuevo post
 exports.createPost = async (req, res) => {
   const { user_id, title, description, media_url, media_type } = req.body;
   try {

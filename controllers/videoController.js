@@ -1,6 +1,5 @@
 const client = require('../config/db');
 
-// Obtener todos los videos
 exports.getAllVideos = async (req, res) => {
   try {
     const resultado = await client.query('SELECT * FROM videosretos');
@@ -12,9 +11,8 @@ exports.getAllVideos = async (req, res) => {
 };
 
 exports.getVideoById = async (req, res) => {
-  const { usuario_id, reto_id } = req.params; // Ahora también se recibe el reto_id
+  const { usuario_id, reto_id } = req.params;
   try {
-    // Modificamos la consulta SQL para que busque por 'id' y 'reto_id'
     const resultado = await client.query('SELECT video_url FROM videosretos WHERE usuario_id = $1 AND reto_id = $2', [usuario_id, reto_id]);
 
     if (resultado.rows.length === 0) {
@@ -28,7 +26,6 @@ exports.getVideoById = async (req, res) => {
 };
 
 
-// Crear un nuevo video
 exports.createVideo = async (req, res) => {
   const { usuario_id, reto_id, video_url, fecha } = req.body;
   try {
@@ -43,7 +40,6 @@ exports.createVideo = async (req, res) => {
   }
 };
 
-// Actualizar un video
 exports.updateVideo = async (req, res) => {
   const { id } = req.params;
   const { usuario_id, reto_id, video_url, fecha } = req.body;
@@ -66,7 +62,6 @@ exports.updateVideo = async (req, res) => {
 };
 
 
-// Eliminar un video
 exports.deleteVideo = async (req, res) => {
   const { id } = req.params;
   try {

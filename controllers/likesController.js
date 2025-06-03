@@ -23,10 +23,9 @@ exports.addLike = async (req, res) => {
 
 exports.getLikesByPost = async (req, res) => {
     const { postId } = req.params;
-    const userId = req.query.user_id; // opcional, para saber si ese usuario ya dio like
+    const userId = req.query.user_id; 
   
     try {
-      // 1. Contar todos los likes de ese post
       const countResult = await client.query(
         `SELECT COUNT(*) AS likes_count
          FROM post_likes
@@ -35,7 +34,6 @@ exports.getLikesByPost = async (req, res) => {
       );
       const likesCount = parseInt(countResult.rows[0].likes_count, 10);
   
-      // 2. (Opcional) Comprobar si un usuario concreto ya dio like
       let userLiked = false;
       if (userId) {
         const existResult = await client.query(

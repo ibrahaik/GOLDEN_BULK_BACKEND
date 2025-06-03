@@ -1,7 +1,6 @@
 const client = require('../config/db');
 
  
-// Obtener todas las comunidades
 exports.getAllComunidades = async (req, res) => {
   try {
     const resultado = await client.query('SELECT * FROM comunidades');
@@ -12,7 +11,6 @@ exports.getAllComunidades = async (req, res) => {
   }
 };
 
-// Obtener una comunidad por ID
 exports.getComunidadById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -27,7 +25,6 @@ exports.getComunidadById = async (req, res) => {
   }
 };
 
-// Crear una nueva comunidad
 exports.createComunidad = async (req, res) => {
   const { nombre, pais, ciudad } = req.body;
   try {
@@ -42,7 +39,6 @@ exports.createComunidad = async (req, res) => {
   }
 };
 
-// Actualizar una comunidad
 exports.updateComunidad = async (req, res) => {
   const { id } = req.params;
   const { nombre, pais, ciudad } = req.body;
@@ -61,7 +57,6 @@ exports.updateComunidad = async (req, res) => {
   }
 };
 
-// Eliminar una comunidad
 exports.deleteComunidad = async (req, res) => {
   const { id } = req.params;
   try {

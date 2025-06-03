@@ -3,7 +3,6 @@ const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
 const verificarToken = require('../middlewares/auth');
 
-// Rutas usuarios
 
 router.post('/login', usuarioController.login);
 router.post('/registro', usuarioController.crearUsuario);
