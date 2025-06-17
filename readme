@@ -1,1 +1,131 @@
-Aplicación fitness totalmente funcional creada con React native con Expo, Node.js con Express, PostgreSQL, FireBase, Cloudinary, Ngrok, JavaScript, el usuario cuando se registra se le despliegan una serie de comunidades (Hacen referencia a una región de España) cuando el usuario selecciona una comunidad se le enlaza directamente con ella y accede a un chat global con miembros de esa misma comunidad, además se le muestra un feed de post y vídeos que publican los administradores, pueden comentar y dar me gusta, existe una sección de retos que publican los administradores donde pueden acceder y completarlos, los retos se complenta abriendo la cámara de la app y grabandote completandolos, estos vídeos llegan a la administración la cual decide si aprobar el vídeo o no, si lo aprueban se le asigna una cantidad de puntos al usuario, esa cantidad de puntos se le suman a su balance y pueden canjearlos en la tienda virtual por suplementos o productos deportivos, además cuentan con una sección de mi perfil donde pueden gestionar su información, la app consta de un portal de administración.
+
+# 🧠 Golden Bulk - Backend
+
+Este es el backend de la aplicación de fitness **Golden Bulk**, desarrollado con **Node.js**, **Express** y **PostgreSQL**. Proporciona funcionalidades RESTful, autenticación JWT, integración con Firebase, manejo de puntos y retos fitness, y gestión de productos canjeables por los usuarios.
+
+---
+
+## 🚀 Funcionalidades principales
+
+- **Autenticación JWT**
+- **Registro y login de usuarios**
+- **Gestión de comunidades regionales**
+- **Retos fitness administrados**
+- **Subida y aprobación de vídeos**
+- **Sistema de puntos y tienda virtual**
+- **Panel de administración para retos, productos y vídeos**
+
+---
+
+## ⚙️ Tecnologías utilizadas
+
+- Node.js + Express
+- PostgreSQL
+- JWT (jsonwebtoken)
+- Firebase (frontend complementario)
+- Cloudinary (almacenamiento de medios, vía frontend)
+- Ngrok (para pruebas locales)
+- CORS, Body-parser, Bcrypt
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+ibrahaik-golden_bulk_backend/
+├── server.js
+├── socket.js
+├── config/
+│   └── db.js
+├── controllers/
+│   ├── usuarioController.js
+│   ├── comunidadController.js
+│   ├── retoController.js
+│   ├── videoController.js
+│   ├── puntoController.js
+│   ├── postsController.js
+│   ├── likesController.js
+│   ├── commentsController.js
+│   ├── productoController.js
+│   └── compraController.js
+├── routes/
+│   ├── usuarioRoutes.js
+│   ├── comunidadRoutes.js
+│   ├── retoRoutes.js
+│   ├── videoRoutes.js
+│   ├── puntoRoutes.js
+│   ├── postsRoutes.js
+│   ├── likesRoutes.js
+│   ├── commentsRoutes.js
+│   ├── productosRoutes.js
+│   ├── compraRoutes.js
+│   └── informacionRoutes.js
+├── middlewares/
+│   └── auth.js
+└── package.json
+```
+
+---
+
+## 🔧 Instalación y ejecución
+
+1. Clona el repositorio y navega al proyecto:
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd ibrahaik-golden_bulk_backend
+```
+
+2. Instala las dependencias:
+
+```bash
+npm install
+```
+
+3. Configura la conexión a PostgreSQL en `config/db.js`:
+
+```js
+const client = new Client({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'fitplus',
+  password: 'usuario',
+  port: 5432,
+});
+```
+
+4. Inicia el servidor:
+
+```bash
+node server.js
+```
+
+---
+
+## 🌐 Endpoints disponibles
+
+Todos los endpoints base siguen el prefijo correspondiente:
+
+- `/usuarios`: registro, login, info actual
+- `/comunidades`: CRUD de comunidades
+- `/retos`: CRUD de retos
+- `/videos`: subida, revisión y estado de retos en vídeo
+- `/posts`, `/likes`, `/comments`: gestión de publicaciones
+- `/productos`, `/compra`: tienda virtual
+- `/puntos`: puntos acumulados y balance
+- `/informacion`: dirección/envío de usuario
+
+---
+
+## 🔒 Seguridad
+
+- Autenticación por token JWT
+- Middleware de autorización (`auth.js`)
+- Contraseñas encriptadas con Bcrypt
+- Rutas protegidas para datos sensibles
+
+---
+
+
+Desarrollado por Ibrahim Haik
+🔗 [https://es.linkedin.com/in/ibrahim-haik-a12654226 / https://github.com/ibrahaik]
